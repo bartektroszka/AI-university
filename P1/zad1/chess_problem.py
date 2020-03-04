@@ -89,13 +89,3 @@ class Whiteking(Figure):
             self.posy = y
 
 
-board = Board(8, [], [], [], [])
-rook = Rook(1,7,board)
-whiteking = Whiteking(6,5,board)
-blackking = Blackking(7,7,board)
-board.whitefigures = [rook]
-board.whiteking = whiteking
-board.blackking = blackking
-print(board.board)
-print(board.CheckForWhite(0,0))
-print(board.CheckMForWhite())

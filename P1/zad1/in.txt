@@ -1,0 +1,4 @@
+black c7 a8 b6
+black h3 b2 g7
+black a1 d4 b6
+black a1 h8 b2
