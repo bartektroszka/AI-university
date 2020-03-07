@@ -25,11 +25,11 @@ with open("in.txt") as source:
     for line in source:
         lis = line.split()
         if lis[0] == "black":
-            b = BFS((8, change(lis[1]), change(lis[2]), change(lis[3]), 0))
+            b = BFS((8, change(lis[1]), change(lis[3]), change(lis[2]), 0))
             for i in range(len(b)//5):
                 draw(b[5*i:5*i+5])
 
         else:
-            b = BFS((8, change(lis[1]), change(lis[2]), change(lis[3]), 1))
+            b = BFS((8, change(lis[1]), change(lis[3]), change(lis[2]), 1))
             for i in range(len(b)//5):
                 draw(b[5*i:5*i+5])

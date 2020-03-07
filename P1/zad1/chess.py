@@ -23,11 +23,11 @@ def check_m_for_white(size, white_king_pos, black_king_pos, rook_pos):
     for i in range(3):
         for j in range(3):
             if (0<=black_king_pos[0] + 1 - i<size and 0<=black_king_pos[1] + 1 - j<size):
-                if not check_for_white(white_king_pos, [black_king_pos[0] + 1 - i, black_king_pos[1] + 1 - j], rook_pos):
+                if check_for_white(white_king_pos, (black_king_pos[0] + 1 - i, black_king_pos[1] + 1 - j), rook_pos) == False:
                     return False
     return True
 
-
+#if last_move 1 now white
 def all_pos_moves(size, white_king_pos, black_king_pos, rook_pos, last_move):
     def white_king_pos_moves():
         possibilities = set()
@@ -91,8 +91,3 @@ def BFS(board):
                     queue.append(next_board)
                     queue.append(queue[i+1]+next_board)
                     checked.add(next_board)
-                
-
-
-    
-

@@ -34,14 +34,14 @@ def variant(hand):
     return 0
 
 
-def random_hand_blot(): #losowa talia dla blotkarza
+def random_hand_blot(cards_out): #losowa talia dla blotkarza
     hand = []
     for i in range(5):
         stopper = False
         while stopper == False:
             number = randint(2,10)    #mozemy zmienic zakres czyli wyrzucić 4 karty o najniższych wartościach
             color = randint(1,4)
-            if not ((number, color) in hand):
+            if not (((number, color) in hand) or ((number, color) in cards_out)):
                 hand.append((number, color))
                 stopper = True
     return hand
@@ -60,25 +60,13 @@ def random_hand_royal():
 
 
 
-def changed_random_hand_blot(min): #losowa talia dla blotkarza
-    hand = []
-    for i in range(5):
-        stopper = False
-        while stopper == False:
-            number = randint(min,10)    #mozemy zmienic zakres czyli wyrzucić 4 karty o najniższych wartościach
-            color = randint(1,4)
-            if not ((number, color) in hand):
-                hand.append((number, color))
-                stopper = True
-    return hand
 
-
-def play_games(num_of_games):
+def play_games(num_of_games, cards_out):
     royal_score = 0
     blot_score = 0
     for i in range(num_of_games):
         royal_hand = random_hand_royal()
-        blot_hand = random_hand_blot()
+        blot_hand = random_hand_blot(cards_out)
         if variant(royal_hand) >= variant(blot_hand):
             royal_score += 1
         else:
@@ -87,21 +75,7 @@ def play_games(num_of_games):
     print("blot score:", blot_score)
 
 
-def changed_play_games(num_of_games, min):
-    royal_score = 0
-    blot_score = 0
-    for i in range(num_of_games):
-        royal_hand = random_hand_royal()
-        blot_hand = changed_random_hand_blot(min)
-        if variant(royal_hand) >= variant(blot_hand):
-            royal_score += 1
-        else:
-            blot_score += 1
-    print("royal score:", royal_score)
-    print("blot score:", blot_score)
 
 for i in range(5):
-    play_games(1000)
+    play_games(1000, ((2,1), (2,2), (2,3)))
 print("____________________________________________")
-for i in range(5):
-    changed_play_games(1000, i+2)
