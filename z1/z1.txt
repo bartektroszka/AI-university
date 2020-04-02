@@ -1,0 +1,53 @@
+1.1. Kolumny: (N-1, N, N, N....  N, N, N-1), wiersze tak samo
+wtedy miejsca, których możemy nie zamalować będą w rogach obrazka, a żeby się zgadzały krańcowe kolumny i wiersze,
+to musimy zamalować pola naprzeciwko. Możemy to zrobić na dwa sposoby.
+1.2. W każdej kolumnie i w każdym wierszu po 1. Wtedy w pierwszej kolumnie mamy n możliwości, w drugiej n-1 itd. 
+W sumie daje to n! możliwości a n! > n.
+
+2. Stan: miasto, w którym się znajdujemy, ilość paliwa w baku.
+Model: przeniesienie się do miasta oraz zmiana ilości paliwa
+
+3. Stosuję relaksację polegającą na tym, że zakładam nieskończoną ilość paliwa w baku a nastepnie koszty liczę za pomocą algorytmu dijkstry.
+
+4.
+
+5.1. MAksymalny współczynnik rozgałęzienia = 9^K bo każdym koniem możemy się ruszyć na 9 sposobów(włącznie z brakiem ruchu).
+5.2. A i B. Ponieważ każda z tych heurystyk(minimalna oraz maksymalna także) jest optymistyczna. C niekoniecznie bo suma optymistycznych heurstyk nie musi być optymistyczna.
+5.3 1) 8*K ponieważ na K sposobów wybieramy skoczka, którym możemy się ruszyć na 8 sposobów
+    2)wtedy min to to samo co max oraz suma bo jest tylko jedna heurystyka i jest ona optymistyczna, więc wszystkie są optymistyczne
+
+6.
+from random import randint, shuffle
+
+def deploy_queen(N):
+    positions = [0 for i in range(N)] #[psitions of queens in columns]
+    rows = [[i, 0] for i in range(N)]
+    diagonals_1 = [0 for i in range(2*N - 1)] # /
+    diagonals_2 = [0 for i in range(2*N - 1)] # \
+    stopper = 0
+    while stopper == 0:
+        counter = N
+        for i in range(N):
+            shuffle(rows)
+            stop = 0
+            for j in range(N):
+                if rows[j][1] == 0 and diagonals_1[rows[j][0] + i] == 0 and diagonals_2[N - 1 - rows[j][0] + i] == 0:
+                    rows[j][1] = 1
+                    positions[i] = rows[j][0]
+                    diagonals_1[rows[j][0] + i] = 1
+                    diagonals_2[N - 1 - rows[j][0] + i] = 1
+                    counter -= 1
+                    stop += 1
+                    break
+            if stop == 0:
+                positions = [0 for i in range(N)] #[psitions of queens in columns]
+                rows = [[i, 0] for i in range(N)]
+                diagonals_1 = [0 for i in range(2*N - 1)] # /
+                diagonals_2 = [0 for i in range(2*N - 1)] # \
+                break
+        if counter == 0:
+            stopper = 1
+    print(positions)
+
+6.1. jest to około 6.9%
+6.2. jest to bardzo zróżnicowane, najwięcej to było 250

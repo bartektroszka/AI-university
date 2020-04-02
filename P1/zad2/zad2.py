@@ -12,23 +12,18 @@ def f(text):
             if line in text:
                 if line != "":
                     list_of_words.append(line)
-    longest_word = max(list_of_words, key=len)
+    length_of_longest = len(max(list_of_words, key=lambda s:(len(s), s)))
+    possibilities = []
 
-    def recu(string):
-        counter = 0
-        for i in range(min(len(string), len(longest_word))):
-            if string[:i+1] in list_of_words:
-                counter += 1
-        if counter == 0:
+    def rec(rec_text):
+        if rec_text == "":
             return ""
-        for i in range(min(len(longest_word), len(string))):
-            if string[:i] in list_of_words:
-                return (string[:i+1] + recu(string[i+1:]))
-        
-    lista = recu(text)
-    print(lista)
-    
+        for i in range(1, min(length_of_longest, len(rec_text))):
+            if rec_text[0:i] in list_of_words:
+                poss_of_rest = rec_text[0:i] + " " +  rec(rec_text[i:])
+                possibilities.append(poss_of_rest)
+        return rec_text      
+    rec(text)
+    print(possibilities)
 
-
-
-print(f("tamatematykapustkinieznosi"))
+f("tamatematykapustkinieznosi")

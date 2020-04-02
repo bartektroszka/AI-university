@@ -2,36 +2,40 @@ from random import randint
 
 #((number, kolor)) 2,3....13,14 //  1,2,3,4
 def variant(hand):
+    list_of_numbers = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    for i in range(5):
+        list_of_numbers[hand[i][0]] += 1
     numbers = set()
-    counter = 1
+    counter = 0
     colors = set()
     for i in range(5):
         colors.add(hand[i][1])
-    if len(colors) == 1:
-        if abs(max((l[0] for l in hand)) - min((l[0] for l in hand))) == 4:
+    if len(colors) == 1: #wszystkie mają ten sam kolor
+        if abs(max((l[0] for l in hand)) - min((l[0] for l in hand))) == 4:#mamy pokera
             return 7
-        else:
-            return 6
+        else: #mamy kolor
+            return 4
     
     for i in range(5):
         if hand[i][0] in numbers:
             counter += 1
         else:
             numbers.add(hand[i][0])
-    if counter == 4:
-        return 5
+    if max(list_of_numbers) == 4:
+        return 6 #kareta
     if len(numbers) == 2:
-        return "ful"
-    if abs(max((l[0] for l in hand)) - min((l[0] for l in hand))) == 4:
-        return 4
+        return 5 #ful
+    if len(numbers) ==5:
+        if abs(max((l[0] for l in hand)) - min((l[0] for l in hand))) == 4:
+            return 3 #street
     if len(numbers) == 3:
-        if counter == 3:
-            return 3
-        else:
-            return 2
+        if max(list_of_numbers) == 3:
+            return 2 #trójka
+        else:    
+            return 1 #dwie pary
     if len(numbers) == 4:
-        return 1
-    return 0
+        return 0 #para
+    return -1
 
 
 def random_hand_blot(cards_out): #losowa talia dla blotkarza
@@ -61,7 +65,7 @@ def random_hand_royal():
 
 
 
-def play_games(num_of_games, cards_out):
+def play_games(num_of_games, cards_out): #cards out np. ((4,4), (9,2))
     royal_score = 0
     blot_score = 0
     for i in range(num_of_games):
@@ -76,6 +80,10 @@ def play_games(num_of_games, cards_out):
 
 
 
-for i in range(5):
-    play_games(1000, ((2,1), (2,2), (2,3)))
+for i in range(10):
+    print("____________________________________________")
+    play_games(1000, ())
 print("____________________________________________")
+
+
+#aby blotkarz wygrywał trzeba mu ułożyć taką talię aby łatwo mu było wylosować fula
