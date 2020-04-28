@@ -1,11 +1,23 @@
 from fun import *
-'''WWWWWW
-W.GWWW
-W..WWW
-W*K..W
-W..B.W
-W..WWW
-WWWWWW'''
+'''
+WWWWWWWW
+W.....WW
+WKBBB.WW
+W..WGGGW
+WW....WW
+WWWWWWWW
+        '''
+
+
+'''
+WWWWWWWWWWWW
+WWWWWW.WWWWW
+W....WWW...W
+W.BB.....WKW
+W.B.WGGG...W
+W...WWWWWWWW
+WWWWWWWWWWWW
+'''
 
 
 def BFS(picture, x_pos, y_pos):
@@ -23,10 +35,14 @@ def BFS(picture, x_pos, y_pos):
     for poss in queue:
         picture, x_pos, y_pos, history = poss
         if done(picture):
-            print(history)
+            #print(history)
+            f = open("zad_output.txt", "a")
+            f.write(history)
+            f.close()
+            #print(len(history))
             return 0
         one_step(picture, x_pos, y_pos, history)
-    print(queue)
+    #print(queue)
 
 
 picture = read_map()
@@ -37,13 +53,12 @@ for i in range(height):
         if picture[i][j] == "K" or picture[i][j] == "+":
             x_pos = j
             y_pos = i
-draw(picture)
-while True:
+'''while True:
     print("___________________")
     move = input()
     picture, x_pos, y_pos = one_move(picture, x_pos, y_pos, move)[0:3]
-    draw(picture)
+    draw(picture)'''
 
-#BFS(picture, x_pos, y_pos)
+BFS(picture, x_pos, y_pos)
 #DLURRRDLULLDDRULURUULDRDDRRULDLUU
 #DLURRRDLULLDDRULURUULDRDDRRULDLUU

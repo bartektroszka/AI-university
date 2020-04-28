@@ -8,25 +8,18 @@ import random
 def solve(proper_rows, proper_columns):
     height = len(proper_rows)
     width = len(proper_columns)
-    picture = [[0  for i in range(width)] for j in range(height)]
+    picture = [[random.randint(0,1)  for i in range(width)] for j in range(height)]
     def new_opt_dist(row, deploy): #row = [1,0,0,1,1...] deploy = [2,3,1] .............. [1,0,0,1,0,0,1,1,0] [2,2,1]
         def how_many_moves(list_of_pos):
-            checked = 0
+            final_list = [0 for i in range(len(row))]
+            for i in range(len(deploy)):
+                for j in range(list_of_pos[i], deploy[i]+list_of_pos[i]) :
+                    final_list[j] = 1
             counter = 0
-            for i in range(len(list_of_pos)):
-                for j in range(checked, list_of_pos[i]):
-                    if row[j] == 1:
-                        counter += 1
-                for j in range(list_of_pos[i], list_of_pos[i] + deploy[i]):
-                    if row[j] != 1:
-                        counter += 1
-                if row[list_of_pos[i] + deploy[i]-1] == 1:
+            for i in range(len(final_list)):
+                if final_list[i] != row[i]:
                     counter += 1
-                checked = list_of_pos[i] + deploy[i] + 1
-            for i in range(checked, len(row)):
-                if row[i] == 1:
-                    counter += 1
-            return counter
+            return counter      
 
         possibilities = []
         def all_possibilities(new_row, new_deploy, checked, history):
@@ -82,50 +75,45 @@ def solve(proper_rows, proper_columns):
             if column != proper_columns[i]:
                 bad.append(i)
         return bad
-
+#PODEJRZANA STREFA
+####################################################################
     def one_step(proper_rows, proper_columns, picture):
         if bad_rows(picture, proper_rows) != []:
-            random_row = random.choice(bad_rows(picture, proper_rows))
-            first_column = [picture[i][0] for i in range(height)]
-            begin_opt = new_opt_dist(first_column, proper_columns[0]) + new_opt_dist(picture[random_row], proper_rows[random_row])
-            current_diff = 1
-            changing = 0
-            for i in range(width):
+            random_row = random.choice(bad_rows(picture, proper_rows))    
+            current_diff = 40           #ta liczba na pewno bedzie mniejsza w przyszłości
+            changing = 0                #aktualnie najlepsza kolumna
+            for i in range(width):         #sprawdzamy po kolei kolumny
                 old_row = [picture[random_row][j] for j in range(width)]
-                new_row = [picture[random_row][j] for j in range(width)]
+                new_row = [picture[random_row][j] for j in range(width)] #wiersz po zmianie
                 new_row[i] = (new_row[i] + 1)%2
                 old_column = [picture[j][i] for j in range(height)]
-                new_column = [picture[j][i] for j in range(height)]
+                new_column = [picture[j][i] for j in range(height)]     #kolumna po zmianie
                 new_column[random_row] = (new_column[random_row] + 1)%2
-                old_opt = new_opt_dist(old_row, proper_rows[random_row]) + new_opt_dist(old_column, proper_columns[i])
-                difference = new_opt_dist(new_row, proper_rows[random_row]) + new_opt_dist(new_column, proper_columns[i]) - old_opt
-                if difference < current_diff:
+                difference = new_opt_dist(new_row, proper_rows[random_row]) + new_opt_dist(new_column, proper_columns[i]) - new_opt_dist(old_row, proper_rows[random_row]) - new_opt_dist(old_column, proper_columns[i])  #różnica w optymalności danego wiersza i kolumny po zmianie, im mniejsza tym lepsza
+                if difference < current_diff: #jeśli jest mniejsza niż dotychczasowa najmniejsza to znaczy że jest lepsza
                     current_diff = difference
                     changing = i
             picture[random_row][changing] = (picture[random_row][changing] + 1) % 2
         
         elif bad_columns(picture, proper_columns) != []:
             random_column = random.choice(bad_columns(picture, proper_columns))
-            first_row = [picture[0][i] for i in range(width)]
-            current_opt = new_opt_dist(first_row, proper_rows[0]) + new_opt_dist([picture[i][random_column] for i in range(height)], proper_columns[random_column])
-            current_diff = 1
+            current_diff = 40
             changing = 0
-            for i in range(width):
+            for i in range(height):
                 old_row = [picture[i][j] for j in range(width)]
                 new_row = [picture[i][j] for j in range(width)]
                 new_row[random_column] = (new_row[random_column] + 1)%2
                 old_column = [picture[j][random_column] for j in range(height)]
                 new_column = [picture[j][random_column] for j in range(height)]
                 new_column[i] = (new_column[i] + 1)%2
-                old_opt = new_opt_dist(old_row, proper_rows[i]) + new_opt_dist(old_column, proper_columns[random_column])
-                difference = new_opt_dist(new_row, proper_rows[random_column]) + new_opt_dist(new_column, proper_columns[i]) - old_opt
+                difference = new_opt_dist(new_row, proper_rows[i]) + new_opt_dist(new_column, proper_columns[random_column]) - new_opt_dist(old_row, proper_rows[i]) - new_opt_dist(old_column, proper_columns[random_column])
                 if difference < current_diff:
                     current_diff = difference
                     changing = i
             picture[changing][random_column] = (picture[changing][random_column] + 1) % 2
         else:
             pass
-    
+#######################################################################################  
     def draw(picture):
         for i in range(height):
             row = []
@@ -137,12 +125,13 @@ def solve(proper_rows, proper_columns):
                 else:
                     row[j] = " "
             print(''.join(row))
+        print()    
 
     while(bad_columns(picture, proper_columns) != [] or bad_rows(picture, proper_rows) != []):
-        picture = [[0  for i in range(width)] for j in range(height)]
-        for i in range(50 * width * height):
+        picture = [[random.randint(0,1)  for i in range(width)] for j in range(height)]
+        for i in range(5 * width * height):
             non_optimal = random.randint(0,100)
-            if non_optimal < 5:
+            if non_optimal < 1:
                 random_row = random.randint(0, height - 1)
                 random_column = random.randint(0, width - 1)
                 picture[random_row][random_column] = (picture[random_row][random_column] + 1)%2
@@ -150,9 +139,11 @@ def solve(proper_rows, proper_columns):
                 one_step(proper_rows, proper_columns, picture)
             else:
                 break
+            
         draw(picture)
     return 0
 
+"""
 proper_rows = []
 proper_columns = []
 height, width = input().split(" ")
@@ -169,30 +160,38 @@ for i in range(width):
     for j in range(len(proper_columns[i])):
         proper_columns[i][j] = int(proper_columns[i][j])
 
+   ...####...
+    ..######..
+    .###.####.
+    ####.#####
+    ####.#####
+    #####.####
+    .#####.##.
+    ..######..
+    ..######..
+    ..##..##..    
+"""
 
 
-solve(proper_rows, proper_columns)  
-print("________________")
+solve([[5],[1,1,1],[3],[2,2],[5]],
+    [[2,2],[1,3],[3,1],[1,3],[2,2]])
+    
+solve( [[4], [6], [3,4], [4,5], [4,5], [5,4], [5,2], [6], [6], [2,2]], 
+       [[3], [5], [9], [10], [2,4], [5,3], [6,3], [9], [5], [3]])
+solve( [[3,3], [2,4,2], [1,2,1], [1,1], [2,2], [3,3], [3,3], [6], [4], [2]], 
+  [[5], [2,3], [1,3], [2,3], [2,3], [2,3], [2,3], [1,3], [2,3], [5]] ) #serce
+  
+solve([[4],[1,1,6],[1,1,6],[1,1,6],[4,9],[1,1],[1,1],[2,7,2],[1,1,1,1],[2,2]],
+    [[4],[1,2],[1,1],[5,1],[1,2],[1,1],[5,1],[1,1],[4,1],[4,1],[4,2],[4,1],[4,1],[4,2],[4]])
+
+solve( [ [5], [9], [5,5], [13], [3,5,3], [15], [1,5,5,1], [15], [2,2], [2,2], [1,1], [1,1], [1,1], [2,2], [5]], [[3], [3,1], [6], [7], [3,3,5], [10,2], [9,1], [2,3,1,1], [9,1], [10,2], [3,3,5], [7], [6], [3,1], [3]])    
+
+solve(
+[[5],[2,2],[1,1],[1,1],[4,4],[2,2,1,2],[1,3,1],[1,1,1,1],[2,7,2],[4,1,5],[2,1,1],[1,1,2],[1,1,1],[2,5,2],[3,4]],
+    [[4],[2,2],[1,5],[1,2,2],[5,2,1],[2,1,1,2],[1,3,1],[1,1,6],[1,3,1],[2,1,2,2],[4,2,1],[1,1,1],[1,3,2],[2,2,3],[4]])     
 
 
-'''
-9 9
-1 1 1
-5 1
-1 1 1 1
-5 1
-6 1
-7
-6
-1 3
-2 4
-4
-1 2 1
-8
-1 4
-7 1
-5
-5
-4
-6
-'''
+solve( [[4],[2,2],[2,2],[2,4,2],[2,1,1,2],[2,4,2],[1,2],[4,4,4],[1,1,1,1,1,1],[4,1,1,4],[1,1,1],[1,1,3],[10],[2,1],[4,1]],
+    [[5,1],[2,1,1,1],[2,1,1,2],[2,3,3],[2,1],[2,3,6],[1,1,1,1,1],[1,1,1,1,1],[2,3,6],[2,1],[2,3,1],[2,1,1,1],[2,1,1,4],[7],[1,1]])  
+
+   
