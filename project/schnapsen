@@ -1,0 +1,63 @@
+import random
+#n-nine, t-ten... k-king ... 1-pikes, 2-clovers, 3-tiles, 4-hearts
+class Game:
+    def __init__(self, bid_turn):
+        self.deck_cards = {("n",1),("n",2),("n",3),("n",4),("t",1),("t",2),("t",3),("t",4),("j",1),("j",2),("j",3),("j",4),("q",1),("q",2),("q",3),("q",4),("k",1), ("k",2), ("k",3), ("k",4), ("a",1), ("a",2), ("a",3), ("a",4)}
+        self.stock = {}
+        for i in range(3):
+            stock.add(deck_cards.pop())
+        self.player_1_cards = set()
+        self.player_2_cards = set()
+        self.player_3_cards = set()
+        for i in range(7):
+            self.player_1_cards.add(self.deck_cards.pop())
+            self.player_2_cards.add(self.deck_cards.pop())
+            self.player_3_cards.add(self.deck_cards.pop())
+        self.bid_turn = 1
+
+
+    def bidding(self):
+        bid_score = 100
+        stock_owner = self.bid_turn
+        pass_counter = 0
+        stock_owner = 0
+        while bid_score <= 360 and pass_counter < 3:
+            bid_turn = bid_turn%3 + 1
+            if bid_turn == 1:
+                player_1_bid = player_1_bid(self)
+                if player_1_bid == "pass":
+                    pass_counter += 1
+                else:
+                    bid_score = player_1_bid
+                    stock_owner = 1
+            elif bid_turn == 2:
+                player_2_bid = player_2_bid(self)
+                if player_2_bid == "pass":
+                    pass_counter += 1
+                else:
+                    bid_score = player_2_bid
+                    stock_owner = 2
+            else:
+                player_3_bid = player_3_bid(self)
+                if player_3_bid == "pass":
+                    pass_counter += 1
+                else:
+                    bid_score = player_3_bid
+                    stock_owner = 3
+        self.stock_owner = stock_owner
+        self.bid_score = bid_score
+        if stock_owner == 1:
+            self.player_1_card.update(self.stock)
+        elif stock_owner == 2:
+            self.player_2_card.update(self.stock)
+        else:
+            self.player_3_card.update(self.stock)
+
+    def game_loop(self):
+        
+
+        
+
+
+            
+
